@@ -1,5 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config();
+
+
 import amqp from 'amqplib';
 
 let channel: amqp.Channel;
