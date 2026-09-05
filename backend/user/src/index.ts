@@ -1,26 +1,27 @@
-import express from "express";
-import dotenv from "dotenv";
-export const connectDb = () => {
-  // Your database connection logic here
-};
-import {createClient} from 'redis'
+import express from 'express'
+import dotenv from 'dotenv'
+import connectDb from './config/db.js'
+import { createClient } from 'redis'    
 
+dotenv.config()
 
-dotenv.config();
-connectDb();
+connectDb()
 
+const redisUrl = process.env.REDIS_URL
+if (!redisUrl) {
+  throw new Error('REDIS_URL is not defined in .env')
+}
 export const redisClient = createClient({
-    url: process.env.REDIS_URL,
-)};  
+  url: redisUrl,
+})
 
-redisClient.on('error', (err) => console.error("Redis client error:", err));
+redisClient.connect().then(()=>console.log("Connected to Redis")) .catch(console.error)
+
+const app = express()
 
 
-
-const app = express();
-
-const port = process.env.PORT || 5000;
+const port = process.env.PORT
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+  console.log(`Server is running on port ${port}`)
+})
