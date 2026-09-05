@@ -2,7 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDb from './config/db.js'
 import { createClient } from 'redis'    
-
+import userRoutes from './routes/users.js'
 dotenv.config()
 
 connectDb()
@@ -18,6 +18,8 @@ export const redisClient = createClient({
 redisClient.connect().then(()=>console.log("Connected to Redis")) .catch(console.error)
 
 const app = express()
+
+app.use("api/users", userRoutes)
 
 
 const port = process.env.PORT
