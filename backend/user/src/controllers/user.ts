@@ -1,48 +1,85 @@
+
+import { publishToQueue } from "../config/rabbitmq.js";
 import TryCatch from "../config/TryCatch.js";
 import { redisClient } from "../index.js";
-import { publishToQueue } from "../config/rabbitmq.js";
+import { User } from "../modal/User.js";
 
-export const GenerateOTP = TryCatch(async (req, res) => {
-    const { email } = req.body;
-    const rateLimitKey = `email:${email}`;
-    
-    // Check if the user is rate-limited
-    const rateLimit = await redisClient.get(rateLimitKey);
-    if (rateLimit) {
-        return res.status(429).json({
-            message: "Too many requests. Please wait before requesting new OTP.",
-            error: "Too many requests"
-        });
+
+export const loginUser = TryCatch(async(req, res)=>{
+    const {email}= req.body
+    const rateLimitKey = `otp:ratelimit:${email}`
+    const rateLimit = await redisClient.get(rateLimitKey)
+    if(rateLimit){
+        res.status (429).json(
+            {message:"Too many requests, please try again later"
+        })
+        return
     }
 
-    // 1. Generate a random 6-digit OTP number
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    
-    // 2. Define the key and save the OTP to Redis (expires in 5 minutes)
-    const otpKey = `otp:${email}`;
+    const otp = Math.floor(100000 + Math.random() * 900000).toString()
+    const otpKey = `otp:${email}`
+    await redisClient.set(otpKey, otp, {EX: 300})
+    // res.json({message: "OTP sent successfully", otp})
 
-    await redisClient.set(otpKey, otp.toString(), {
-        EX: 300
-    });
+    await redisClient.set(rateLimitKey, "true", {EX: 60})
 
-    // 3. Set your rate limit tracking key (expires in 1 minute / 60 seconds)
-    await redisClient.set(rateLimitKey, "true", {
-        EX: 60
-    });
 
-    // 4. Construct the email notification payload
     const message = {
         to: email,
-        subject: "Your OTP Code",
-        body: `Your OTP is ${otp}. It will expire in 5 minutes.`
-    };
+        subject: "Your OTP code",
+        text: `Your OTP is ${otp}. It will expire in 5 minutes.`,
+    }
 
-    // 5. Send payload to your RabbitMQ background worker queue
-    await publishToQueue("send-otp", message);
+    await publishToQueue("send-otp", message)
 
-    // 6. Return response to user successfully
-    return res.status(200).json({
-        message: "OTP sent successfully.",
-        otp: otp
-    });
-});
+    res.status(200).json({
+        message: "OTP sent successfully"
+    })
+})
+
+export const verifyUser = TryCatch(async(req, res)=>{
+    const {email, otp:enteredOtp} = req.body
+
+    // const otpKey = `otp:${email}`
+    // const storedOtp = await redisClient.get(otpKey)
+
+    if(!email || !enteredOtp){
+        res.status(400).json({
+            message:"Email and OTP are required"
+        })
+        return
+    }
+
+    const otpKey = `otp:${email}`
+
+    const storedOtp = await redisClient.get(otpKey)
+
+    if(!storedOtp || storedOtp !== enteredOtp){
+        res.status(400).json({
+            message:"Invalid or expired OTP"
+        })
+        return
+    }
+
+    await redisClient.del(otpKey)
+
+    let user = await User.findOne({email})
+
+    if(!user){
+        const name = email.slice(0,8)
+        user = await User.create({ name, email })
+    }
+
+    // const token = user.generateToken()
+
+    // res.json({
+        // message:"User verified successfully",
+        // user,
+        // token,
+    })
+// })
+
+// export const myProfile = TryCatch(async(req: AuthenticatedRequest, res)=>{
+//     const user = req.user
+//     res.json(user)
+// })

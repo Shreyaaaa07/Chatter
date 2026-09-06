@@ -23,7 +23,7 @@ export const connectRabbitMQ = async () => {
     } catch (error) {
         console.log("Failed to connect to rabbitmq", error);
     }
-};
+}
 
 export const publishToQueue = async (queueName: string, message: any) => {
     if(!channel){
