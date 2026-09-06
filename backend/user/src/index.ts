@@ -2,11 +2,10 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDb from './config/db.js'
 import { createClient } from 'redis'    
-import userRoutes from './routes/users.js'
-import { connectRabbitMQ } from "./config/rabbit.js"
+import userRoutes from './routes/user.js'
+import { connectRabbitMQ } from './config/rabbitmq.js'
 
 dotenv.config()
-
 
 connectDb()
 
@@ -24,8 +23,7 @@ redisClient.connect().then(()=>console.log("Connected to Redis")) .catch(console
 
 const app = express()
 
-app.use("api/users", userRoutes)
-
+app.use("api/v1", userRoutes) 
 
 const port = process.env.PORT
 
