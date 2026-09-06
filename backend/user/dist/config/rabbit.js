@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import amqp from 'amqplib';
+dotenv.config();
 let channel;
 export const connectRabbitMQ = async () => {
     try {
@@ -32,4 +32,5 @@ export const publishToQueue = async (queueName, message) => {
         persistent: true,
     });
 };
+//# sourceMappingURL=rabbitmq.js.map
 //# sourceMappingURL=rabbit.js.map
