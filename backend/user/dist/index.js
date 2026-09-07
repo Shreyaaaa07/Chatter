@@ -16,7 +16,7 @@ export const redisClient = createClient({
 });
 redisClient.connect().then(() => console.log("Connected to Redis")).catch(console.error);
 const app = express();
-app.use("api/v1", userRoutes);
+app.use("/api/v1", userRoutes);
 const port = process.env.PORT;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
