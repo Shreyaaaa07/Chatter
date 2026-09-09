@@ -1,8 +1,7 @@
- import { generateToken } from "../config/generateToken.js";
+import { generateToken } from "../config/generateToken.js";
 import { publishToQueue } from "../config/rabbitmq.js";
 import TryCatch from "../config/TryCatch.js";
-import { redisClient } from "../index.js";
- import { type AuthenticatedRequest } from "../middleware/isAuth.js";
+import { redisClient } from "../index.js";import { type AuthenticatedRequest } from "../middleware/isAuth.js";
 import { User } from "../modal/User.js";
 
 
@@ -41,8 +40,8 @@ export const loginUser = TryCatch(async(req, res)=>{
 export const verifyUser = TryCatch(async(req, res)=>{
     const {email, otp:enteredOtp} = req.body
 
-    // const otpKey = `otp:${email}`
-    // const storedOtp = await redisClient.get(otpKey)
+    const otpKey = `otp:${email}`
+     const storedOtp = await redisClient.get(otpKey)
 
     if(!email || !enteredOtp){
         res.status(400).json({
@@ -85,33 +84,33 @@ export const myProfile = TryCatch(async(req: AuthenticatedRequest, res)=>{
     res.json(user)
  })
 
-// export const updateName = TryCatch(async(req: AuthenticatedRequest, res)=>{
-//     const user = await User.findById(req.user?._id)
+export const updateName = TryCatch(async(req: AuthenticatedRequest, res)=>{
+    const user = await User.findById(req.user?._id)
 
-//     if(!user){
-//         res.sendStatus(404).json({
-//             message: "Please login",
-//         })
-//         return
-//     }
-//     user.name = req.body.name
+    if(!user){
+        res.sendStatus(404).json({
+            message: "Please login",
+        })
+        return
+    }
+    user.name = req.body.name
 
-//     await user.save()
+    await user.save()
 
-//     const token = generateToken(user)
+    const token = generateToken(user)
 
-//     res.json({
-//         message: "Name updated successfully",
-//         user,
-//         token,
-//     })
-// })
+    res.json({
+        message: "Name updated successfully",
+        user,
+        token,
+    })
+})
 
-// export const getAllUsers = TryCatch(async(req: AuthenticatedRequest, res)=>{
-//     const users = await User.find()
+export const getAllUsers = TryCatch(async(req: AuthenticatedRequest, res)=>{
+    const users = await User.find()
 
-//     res.json(users)
-// })
+    res.json(users)
+})
 
 export const getAUser = TryCatch(async(req, res)=> {
     const user = await User.findById(req.params.id)
