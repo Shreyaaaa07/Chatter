@@ -2,7 +2,7 @@
 import { publishToQueue } from "../config/rabbitmq.js";
 import TryCatch from "../config/TryCatch.js";
 import { redisClient } from "../index.js";
-// import { type AuthenticatedRequest } from "../middleware/isAuth.js";
+ import { type AuthenticatedRequest } from "../middleware/isAuth.js";
 import { User } from "../modal/User.js";
 
 
