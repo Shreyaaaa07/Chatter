@@ -80,10 +80,10 @@ export const verifyUser = TryCatch(async(req, res)=>{
     })
 })
 
-// export const myProfile = TryCatch(async(req: AuthenticatedRequest, res)=>{
-//     const user = req.user
-//     res.json(user)
-// })
+export const myProfile = TryCatch(async(req: AuthenticatedRequest, res)=>{
+    const user = req.user
+    res.json(user)
+ })
 
 // export const updateName = TryCatch(async(req: AuthenticatedRequest, res)=>{
 //     const user = await User.findById(req.user?._id)
