@@ -88,4 +88,13 @@ export const getAUser = TryCatch(async (req, res) => {
     const user = await User.findById(req.params.id);
     res.json(user);
 });
+export const verifyUser = TryCatch(async (req, res) => {
+    const { email, otp: enteredOtp } = req.body;
+    if (!EMAIL || !entered)
+        otp;
+}), { res, status };
+(400).json({
+    message: "Email and OTP Required"
+});
+return;
 //# sourceMappingURL=user.js.map

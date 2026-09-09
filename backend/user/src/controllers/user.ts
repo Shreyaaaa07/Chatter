@@ -118,3 +118,15 @@ export const getAUser = TryCatch(async(req, res)=> {
 
     res.json(user)
 })
+
+export const verifyUser = TryCatch(async(req,res)=>{
+    const{email,otp:enteredOtp} = req.body
+
+    if(!EMAIL || !entered otp){
+        res.status(400).json({
+            message:"Email and OTP Required"
+        });
+        return;
+    }
+
+
