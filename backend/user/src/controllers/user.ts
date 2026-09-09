@@ -1,4 +1,4 @@
-// import { generateToken } from "../config/generateToken.js";
+ import { generateToken } from "../config/generateToken.js";
 import { publishToQueue } from "../config/rabbitmq.js";
 import TryCatch from "../config/TryCatch.js";
 import { redisClient } from "../index.js";
@@ -122,7 +122,7 @@ export const getAUser = TryCatch(async(req, res)=> {
 export const verifyUser = TryCatch(async(req,res)=>{
     const{email,otp:enteredOtp} = req.body
 
-    if(!EMAIL || !entered otp){
+    if(!email || !enteredOtp){
         res.status(400).json({
             message:"Email and OTP Required"
         });
