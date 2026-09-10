@@ -36,7 +36,7 @@ Promise<void> => {
         }
 
         req.user = decodedValue.user
-        next()
+        next();
     }catch(error){
         res.status(401).json({
             message: "Please Login - JWT error"
