@@ -1,5 +1,6 @@
 //import { generateToken } from "../config/generateToken.js";
 // import { publishToQueue } from "../config/rabbitmq.js";
+import { generateToken } from "../config/generateToken.js";
 import TryCatch from "../config/TryCatch.js";
 import { redisClient } from "../index.js";
 import { User } from "../modal/User.js";
@@ -112,11 +113,11 @@ export const verifyUser = TryCatch(async(req, res)=>{
 
       const token = generateToken(user)
 
-    // res.status(200).json({
-    //     message:"User verified successfully",
-    //     user,
-    //     token,
-    // })
+    res.status(200).json({
+        message:"User verified successfully",
+         user,
+         token,
+     })
 })
 
 //      const token = generateToken(user)
