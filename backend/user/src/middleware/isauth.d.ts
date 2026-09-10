@@ -1,5 +1,5 @@
-import { type Request, type Response, type NextFunction } from "express";
-import { IUser } from "../model/user.js";
+import type { NextFunction, Request, Response } from "express";
+import type { IUser } from "../modal/User.js";
 export interface AuthenticatedRequest extends Request {
     user?: IUser | null;
 }
