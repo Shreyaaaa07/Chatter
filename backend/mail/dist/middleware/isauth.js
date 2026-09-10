@@ -1,7 +1,7 @@
 import {} from "express";
 import { IUser } from "../model/user.js";
-import jwt from "jsonwebtoken";
-export const isAuth = Aync(req, AuthenticatedRequest, res, Response, next, nextFunction), promise;
+import jwt, { JwtPayload } from "jsonwebtoken";
+export const isAuth = Aync(req, AuthenticatedRequest, res, Response, next, NextFunction), promise;
 ;
 {
     try {

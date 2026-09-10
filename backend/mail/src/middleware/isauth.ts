@@ -1,12 +1,12 @@
-import {type Request} from "express";
+import {type Request, type NextFunction, type Response} from "express";
 import {IUser}from "../model/user.js";
-import jwt from "jsonwebtoken";
+import jwt, {JwtPayload} from "jsonwebtoken";
 
 export interface AuthenticatedRequest extends Request {
     user?:IUser | null;
 }
 
-export const isAuth = Aync(req:AuthenticatedRequest, res: Response, next:nextFunction):
+export const isAuth = Aync(req:AuthenticatedRequest, res: Response, next:NextFunction):
 promise<void> => {
     try{
         const authHeader = req.headers.authorization;
