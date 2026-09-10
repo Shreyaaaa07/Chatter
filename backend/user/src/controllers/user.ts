@@ -110,7 +110,7 @@ export const verifyUser = TryCatch(async(req, res)=>{
     const name = email.slice(0,8)
     const user = await User.create({ name, email })
 
-    //  const token = generateToken(user)
+      const token = generateToken(user)
 
     // res.status(200).json({
     //     message:"User verified successfully",
