@@ -4,6 +4,7 @@ import TryCatch from "../config/TryCatch.js";
 import { redisClient } from "../index.js";
 // // import { redisClient } from "../index.js";import { type AuthenticatedRequest } from "../middleware/isAuth.js";
 // import { User } from "../modal/User.js";
+// import { sendMail } from "../config/sendMail.js";
 
 export const loginUser = TryCatch(async (req, res) => {
     const { email } = req.body;
@@ -68,33 +69,43 @@ export const loginUser = TryCatch(async (req, res) => {
 //     })
 // })
 
-// export const verifyUser = TryCatch(async(req, res)=>{
-//     const {email, otp:enteredOtp} = req.body
+export const verifyUser = TryCatch(async(req, res)=>{
+    const {email, otp:enteredOtp} = req.body
 
-    // const otpKey = `otp:${email}`
-    //  const storedOtp = await redisClient.get(otpKey)
+     const otpKey = `otp:${email}`
+      const storedOtp = await redisClient.get(otpKey)
 
-    // if(!email || !enteredOtp){
-    //     res.status(400).json({
-    //         message:"Email and OTP are required"
-    //     })
-    //     return
-    // }
+    if(!storedOtp || storedOtp !== enteredOtp){
+        res.status(400).json({
+            message:"Invalid or expired OTP"
+        })
+        return;
+    }
 
-    // const otpKey = `otp:${email}`
+    // ...rest of your logic
+})
+export const verifyUser = TryCatch(async(req, res)=>{
+    const {email, otp:enteredOtp} = req.body
 
-    // const storedOtp = await redisClient.get(otpKey)
+    if(!email || !enteredOtp){
+        res.status(400).json({
+            message:"Email and OTP are required"
+        })
+        return;
+    }
 
-    // if(!storedOtp || storedOtp !== enteredOtp){
-    //     res.status(400).json({
-    //         message:"Invalid or expired OTP"
-    //     })
-    //     return
-    // }
+    const otpKey = `otp:${email}`
+    const storedOtp = await redisClient.get(otpKey)
 
-    // await redisClient.del(otpKey)
+    if(!storedOtp || storedOtp !== enteredOtp){
+        res.status(400).json({
+            message:"Invalid or expired OTP"
+        })
+        return;
+    }
 
-    // let user = await User.findOne({email})
+    // ...rest of your logic
+})
 
     // if(!user){
     //     const name = email.slice(0,8)
