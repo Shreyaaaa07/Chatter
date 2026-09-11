@@ -5,7 +5,7 @@ import TryCatch from "../config/TryCatch.js";
 import { redisClient } from "../index.js";
 import { User } from "../modal/User.js";
 // // import { redisClient } from "../index.js";
-import {} from "../middleware/isAuth.js";
+import {} from "../middleware/isauth.js";
 // import { User } from "../modal/User.js";
 //import { sendMail } from "../config/sendMail.js";
 export const loginUser = TryCatch(async (req, res) => {
