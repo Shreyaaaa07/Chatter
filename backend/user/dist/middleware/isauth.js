@@ -30,4 +30,4 @@ export const isAuth = async (req, res, next) => {
         });
     }
 };
-//# sourceMappingURL=isauth.js.map
+//# sourceMappingURL=isAuth.js.map
