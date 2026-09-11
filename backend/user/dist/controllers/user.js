@@ -4,7 +4,8 @@ import { generateToken } from "../config/generateToken.js";
 import TryCatch from "../config/TryCatch.js";
 import { redisClient } from "../index.js";
 import { User } from "../modal/User.js";
-// // import { redisClient } from "../index.js";import { type AuthenticatedRequest } from "../middleware/isAuth.js";
+// // import { redisClient } from "../index.js";
+import {} from "../middleware/isAuth.js";
 // import { User } from "../modal/User.js";
 //import { sendMail } from "../config/sendMail.js";
 export const loginUser = TryCatch(async (req, res) => {
@@ -100,10 +101,10 @@ export const verifyUser = TryCatch(async (req, res) => {
 //          token,
 //     })
 // })
-// // export const myProfile = TryCatch(async(req: AuthenticatedRequest, res)=>{
-//     const user = req.user
-//     res.json(user)
-//  })
+export const myProfile = TryCatch(async (req, res) => {
+    const user = req.user;
+    res.json(user);
+});
 // export const updateName = TryCatch(async(req: AuthenticatedRequest, res)=>{
 // const user = await User.findById(req.user?._id)
 // if(!user){
