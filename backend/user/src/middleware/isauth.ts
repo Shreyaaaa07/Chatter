@@ -1,45 +1,46 @@
 import type { NextFunction, Request, Response } from "express";
 import type { IUser } from "../modal/User.js";
-import jwt, { type JwtPayload} from "jsonwebtoken";
+import { User } from "../modal/User.js";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 
 export interface AuthenticatedRequest extends Request {
     user?: IUser | null
 }
 
-export const isAuth = async(req: AuthenticatedRequest, res: Response, next: NextFunction):
+export const isAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction):
 Promise<void> => {
-    try{
+    try {
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            res.status(401).json({message: "Please Login - Noo auth header"
-            })
-            return
+            res.status(401).json({ message: "Please Login - No auth header" });
+            return;
         }
 
-        const token = authHeader.split(" ")[1]
+        const token = authHeader.split(" ")[1];
 
         if (!token) {
-            res.status(401).json({
-                message: "Please Login - No token"
-            })
-            return
+            res.status(401).json({ message: "Please Login - No token" });
+            return;
         }
 
-        const decodedValue = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload
+        const decodedValue = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
 
-        if (!decodedValue || !decodedValue.user) {
-            res.status(401).json({
-                message: "Invalid token"
-            })
-            return
+        if (!decodedValue || !decodedValue.userId) {
+            res.status(401).json({ message: "Invalid token" });
+            return;
         }
 
-        req.user = decodedValue.user
+        const user = await User.findById(decodedValue.userId);
+
+        if (!user) {
+            res.status(401).json({ message: "Please Login - User not found" });
+            return;
+        }
+
+        req.user = user;
         next();
-    }catch(error){
-        res.status(401).json({
-            message: "Please Login - JWT error"
-        })
+    } catch (error) {
+        res.status(401).json({ message: "Please Login - JWT error" });
     }
 }

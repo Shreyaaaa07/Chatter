@@ -85,8 +85,13 @@ export const verifyUser = TryCatch(async (req, res) => {
         return;
     }
     await redisClient.del(otpKey);
-    const name = email.slice(0, 8);
-    const user = await User.create({ name, email });
+    // Find existing user first — only create if they don't already exist.
+    // This prevents a duplicate key (E11000) error on repeat logins.
+    let user = await User.findOne({ email });
+    if (!user) {
+        const name = email.slice(0, 8);
+        user = await User.create({ name, email });
+    }
     const token = generateToken(user);
     res.status(200).json({
         message: "User verified successfully",
